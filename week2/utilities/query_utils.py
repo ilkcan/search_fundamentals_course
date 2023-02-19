@@ -172,8 +172,8 @@ def add_spelling_suggestions(query_obj, user_query):
                     "suggest_mode": "popular"
                 }],
                 "highlight": {
-                    "pre_tag": "<em>",
-                    "post_tag": "</em>"
+                    "pre_tag": "<b>",
+                    "post_tag": "</b>"
                 }
             }
         },

@@ -8,7 +8,7 @@ from flask import (
 from week2.opensearch import get_opensearch
 
 import week2.utilities.query_utils as qu
-
+import json
 bp = Blueprint('search', __name__, url_prefix='/search')
 
 
@@ -148,6 +148,7 @@ def query():
         query_obj = qu.create_query("*", "", [], sort, sortDir, size=100)
 
     #print("query obj: {}".format(query_obj))
+    print("query obj: \n{}".format(json.dumps(query_obj)))
     response = opensearch.search(body=query_obj, index="bbuy_products", explain=explain)
     # Postprocess results here if you so desire
 

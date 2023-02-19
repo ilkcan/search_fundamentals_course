@@ -31,10 +31,10 @@
           "catenate_all": true
         },
         "shingle": {
-            "type": "shingle",
-            "min_shingle_size": 2,
-            "max_shingle_size": 3
-          }
+          "type": "shingle",
+          "min_shingle_size": 2,
+          "max_shingle_size": 3
+        }
       }
     }
   },
@@ -251,6 +251,10 @@
           "keyword": {
             "type": "keyword",
             "ignore_above": 2048
+          },
+          "hyphens": {
+            "type": "text",
+            "analyzer": "smarter_hyphens"
           }
         }
       },
