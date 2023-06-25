@@ -123,17 +123,65 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
             {sort: {"order": sortDir}}
         ],
         "query": {
-            "bool": {
-                "must": [
+            "function_score": {
+                "boost_mode": "multiply", # how _score and functions are combined
+                "score_mode": "sum", # how functions are combined
+                # Use a scaled sales rank as factor in scoring.  This helps popular items rise to the top while still matching on keywords
+                "functions": [
                     {
-                        "query_string": {
-                            "query": user_query,
-                            "fields": ["name^100", "shortDescription^50", "longDescription^10", "department"],
-                            "phrase_slop": 2
+                        "filter": {
+                            "exists": {
+                                "field": "salesRankShortTerm"
+                            }
+                        },
+                        "gauss": {
+                            "salesRankShortTerm": {
+                                "origin": "1.0",
+                                "scale": "100"
+                            }
+                        }
+                    },
+                    {
+                        "filter": {
+                            "exists": {
+                                "field": "salesRankMediumTerm"
+                            }
+                        },
+                        "gauss": {
+                            "salesRankMediumTerm": {
+                                "origin": "1.0",
+                                "scale": "1000"
+                            }
+                        }
+                    },
+                    {
+                        "filter": {
+                            "exists": {
+                                "field": "salesRankLongTerm"
+                            }
+                        },
+                        "gauss": {
+                            "salesRankLongTerm": {
+                                "origin": "1.0",
+                                "scale": "1000"
+                            }
                         }
                     }
                 ],
-                "filter": filters  #
+                "query": {
+                    "bool": {
+                        "must": [
+                            {
+                                "query_string": {
+                                    "query": user_query,
+                                    "fields": ["name^100", "shortDescription^50", "longDescription^10", "department"],
+                                    "phrase_slop": 2
+                                }
+                            }
+                        ],
+                        "filter": filters  #
+                    }
+                }
             }
         },
         "aggs": {
