@@ -19,7 +19,7 @@ def get_opensearch():
             verify_certs=False, # set to true if you have certs
             ssl_assert_hostname=False,
             ssl_show_warn=False,
-
+            timeout=60
         )
 
     return g.opensearch
